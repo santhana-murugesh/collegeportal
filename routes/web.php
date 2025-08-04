@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EnquiryController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -13,7 +14,27 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-// Staff routes
+// Admin routes (full access including user management)
+Route::middleware(['auth', 'admin'])->group(function () {
+    // User management (admin only)
+    Route::resource('users', UserController::class);
+    
+    // News management
+    Route::resource('news', NewsController::class)->except(['index', 'show']);
+    Route::patch('/news/{news}/toggle-publish', [NewsController::class, 'togglePublish'])->name('news.toggle-publish');
+    
+    // Category management
+    Route::resource('categories', CategoryController::class);
+    Route::patch('/categories/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('categories.toggle-status');
+    
+    // Enquiry management
+    Route::get('/enquiries', [EnquiryController::class, 'index'])->name('enquiries.index');
+    Route::get('/enquiries/{enquiry}', [EnquiryController::class, 'show'])->name('enquiries.show');
+    Route::patch('/enquiries/{enquiry}/status', [EnquiryController::class, 'updateStatus'])->name('enquiries.update-status');
+    Route::delete('/enquiries/{enquiry}', [EnquiryController::class, 'destroy'])->name('enquiries.destroy');
+});
+
+// Staff routes (same as admin but no user management)
 Route::middleware(['auth', 'staff'])->group(function () {
     // News management
     Route::resource('news', NewsController::class)->except(['index', 'show']);
@@ -30,7 +51,7 @@ Route::middleware(['auth', 'staff'])->group(function () {
     Route::delete('/enquiries/{enquiry}', [EnquiryController::class, 'destroy'])->name('enquiries.destroy');
 });
 
-// Shared news routes (accessible by both staff and students)
+// Shared news routes (accessible by admin, staff and students)
 Route::middleware(['auth'])->group(function () {
     Route::get('/news', [NewsController::class, 'index'])->name('news.index');
     Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');

@@ -4,12 +4,14 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Categories') }}
             </h2>
-            <a href="{{ route('categories.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Add Category
-            </a>
+            @if(auth()->user()->isAdminOrStaff())
+                <a href="{{ route('categories.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Add Category
+                </a>
+            @endif
         </div>
     </x-slot>
 
@@ -62,25 +64,29 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <div class="flex space-x-2">
-                                                <a href="{{ route('categories.edit', $category) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                                <form method="POST" action="{{ route('categories.toggle-status', $category) }}" class="inline">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="text-yellow-600 hover:text-yellow-900">
-                                                        {{ $category->is_active ? 'Deactivate' : 'Activate' }}
-                                                    </button>
-                                                </form>
-                                                @if($category->news_count == 0)
-                                                    <form method="POST" action="{{ route('categories.destroy', $category) }}" class="inline">
+                                            @if(auth()->user()->isAdminOrStaff())
+                                                <div class="flex space-x-2">
+                                                    <a href="{{ route('categories.edit', $category) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                                    <form method="POST" action="{{ route('categories.toggle-status', $category) }}" class="inline">
                                                         @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete this category?')">
-                                                            Delete
+                                                        @method('PATCH')
+                                                        <button type="submit" class="text-yellow-600 hover:text-yellow-900">
+                                                            {{ $category->is_active ? 'Deactivate' : 'Activate' }}
                                                         </button>
                                                     </form>
-                                                @endif
-                                            </div>
+                                                    @if($category->news_count == 0)
+                                                        <form method="POST" action="{{ route('categories.destroy', $category) }}" class="inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete this category?')">
+                                                                Delete
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                </div>
+                                            @else
+                                                <span class="text-gray-400">No actions available</span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty

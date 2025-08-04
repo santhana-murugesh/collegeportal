@@ -59,6 +59,11 @@ class User extends Authenticatable
         return $this->hasMany(Enquiry::class);
     }
 
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
     public function isStaff()
     {
         return $this->role === 'staff';
@@ -67,5 +72,10 @@ class User extends Authenticatable
     public function isStudent()
     {
         return $this->role === 'student';
+    }
+
+    public function isAdminOrStaff()
+    {
+        return $this->role === 'admin' || $this->role === 'staff';
     }
 }

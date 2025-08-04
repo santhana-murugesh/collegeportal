@@ -13,6 +13,9 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        
+        <!-- Ensure Alpine.js is loaded -->
+        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     </head>
     <body class="font-sans antialiased bg-gradient-to-tr from-blue-100 via-purple-100 to-pink-100 min-h-screen">
         <div class="min-h-screen flex flex-col">

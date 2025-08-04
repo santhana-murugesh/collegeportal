@@ -12,8 +12,8 @@ class NewsController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->isStaff()) {
-            // Staff sees all news (published and unpublished)
+        if (auth()->user()->isAdmin()) {
+            // Admin sees all news (published and unpublished)
             $news = News::with(['category', 'user'])->latest()->paginate(10);
         } else {
             // Students only see published news

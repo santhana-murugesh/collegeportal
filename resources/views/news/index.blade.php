@@ -4,12 +4,14 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('News Management') }}
             </h2>
-            <a href="{{ route('news.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Add News
-            </a>
+            @if(auth()->user()->isAdminOrStaff())
+                <a href="{{ route('news.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Add News
+                </a>
+            @endif
         </div>
     </x-slot>
 
@@ -78,19 +80,23 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <div class="flex space-x-2">
                                                 <a href="{{ route('news.show', $article) }}" class="text-blue-600 hover:text-blue-900">View</a>
-                                                <a href="{{ route('news.edit', $article) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                                <form action="{{ route('news.toggle-publish', $article) }}" method="POST" class="inline">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="text-{{ $article->is_published ? 'yellow' : 'green' }}-600 hover:text-{{ $article->is_published ? 'yellow' : 'green' }}-900">
-                                                        {{ $article->is_published ? 'Unpublish' : 'Publish' }}
-                                                    </button>
-                                                </form>
-                                                <form action="{{ route('news.destroy', $article) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this news article?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
-                                                </form>
+                                                @if(auth()->user()->isAdminOrStaff())
+                                                    <form action="{{ route('news.toggle-publish', $article) }}" method="POST" class="inline">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="text-{{ $article->is_published ? 'yellow' : 'green' }}-600 hover:text-{{ $article->is_published ? 'yellow' : 'green' }}-900">
+                                                            {{ $article->is_published ? 'Unpublish' : 'Publish' }}
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                                @if(auth()->user()->isAdmin())
+                                                    <a href="{{ route('news.edit', $article) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                                    <form action="{{ route('news.destroy', $article) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this news article?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

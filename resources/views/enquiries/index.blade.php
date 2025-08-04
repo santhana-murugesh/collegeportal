@@ -56,20 +56,22 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <div class="flex space-x-2">
                                                 <a href="{{ route('enquiries.show', $enquiry) }}" class="text-blue-600 hover:text-blue-900">View</a>
-                                                <form action="{{ route('enquiries.update-status', $enquiry) }}" method="POST" class="inline">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <select name="status" onchange="this.form.submit()" class="text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
-                                                        <option value="pending" {{ $enquiry->status === 'pending' ? 'selected' : '' }}>Pending</option>
-                                                        <option value="in_progress" {{ $enquiry->status === 'in_progress' ? 'selected' : '' }}>In Progress</option>
-                                                        <option value="resolved" {{ $enquiry->status === 'resolved' ? 'selected' : '' }}>Resolved</option>
-                                                    </select>
-                                                </form>
-                                                <form action="{{ route('enquiries.destroy', $enquiry) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this enquiry?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
-                                                </form>
+                                                @if(auth()->user()->isAdminOrStaff())
+                                                    <form action="{{ route('enquiries.update-status', $enquiry) }}" method="POST" class="inline">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <select name="status" onchange="this.form.submit()" class="text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                                                            <option value="pending" {{ $enquiry->status === 'pending' ? 'selected' : '' }}>Pending</option>
+                                                            <option value="in_progress" {{ $enquiry->status === 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                                                            <option value="resolved" {{ $enquiry->status === 'resolved' ? 'selected' : '' }}>Resolved</option>
+                                                        </select>
+                                                    </form>
+                                                    <form action="{{ route('enquiries.destroy', $enquiry) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this enquiry?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

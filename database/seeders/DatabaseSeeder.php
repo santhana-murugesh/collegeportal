@@ -16,13 +16,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create admin user
+        $admin = User::create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+            'department' => 'Administration',
+        ]);
+
         // Create staff user
         $staff = User::create([
-            'name' => 'Staff Admin',
+            'name' => 'Staff User',
             'email' => 'staff@example.com',
             'password' => Hash::make('password'),
             'role' => 'staff',
-            'department' => 'Administration',
+            'department' => 'Academic Affairs',
         ]);
 
         // Create student user
@@ -57,42 +66,24 @@ class DatabaseSeeder extends Seeder
         $newsData = [
             [
                 'title' => 'Welcome to the New Academic Year',
-                'content' => 'We are excited to welcome all students back for the new academic year. Please check your schedules and attend the orientation session on Monday.',
+                'content' => 'We are excited to welcome all students to the new academic year. Please check your schedules and attend orientation sessions.',
                 'category_id' => 1,
-                'user_id' => $staff->id,
+                'user_id' => $admin->id,
                 'is_published' => true,
-                'published_at' => now(),
             ],
             [
-                'title' => 'Annual Sports Meet Registration Open',
-                'content' => 'Registration for the annual sports meet is now open. Students can register for various events including athletics, swimming, and team sports.',
+                'title' => 'Annual Sports Meet Registration',
+                'content' => 'Registration for the annual sports meet is now open. All students are encouraged to participate.',
                 'category_id' => 4,
-                'user_id' => $staff->id,
+                'user_id' => $admin->id,
                 'is_published' => true,
-                'published_at' => now(),
             ],
             [
                 'title' => 'New Computer Lab Facilities',
-                'content' => 'We are pleased to announce the opening of our new computer lab with state-of-the-art equipment. The lab will be available for students from 8 AM to 8 PM.',
+                'content' => 'The new computer lab with latest technology is now open for students. Book your slots in advance.',
                 'category_id' => 5,
-                'user_id' => $staff->id,
+                'user_id' => $admin->id,
                 'is_published' => true,
-                'published_at' => now(),
-            ],
-            [
-                'title' => 'Student Council Elections',
-                'content' => 'Student council elections will be held next week. All students are encouraged to participate and vote for their representatives.',
-                'category_id' => 2,
-                'user_id' => $staff->id,
-                'is_published' => true,
-                'published_at' => now(),
-            ],
-            [
-                'title' => 'Library Extended Hours',
-                'content' => 'The library will now be open until 10 PM during exam periods to provide students with additional study time.',
-                'category_id' => 3,
-                'user_id' => $staff->id,
-                'is_published' => false,
             ],
         ];
 
@@ -104,30 +95,22 @@ class DatabaseSeeder extends Seeder
         $enquiriesData = [
             [
                 'name' => 'Jane Doe',
-                'email' => 'jane.doe@example.com',
+                'email' => 'jane@example.com',
                 'subject' => 'Course Registration Query',
-                'message' => 'I am having trouble registering for the Advanced Mathematics course. Can someone help me with this?',
+                'message' => 'I need help with course registration for the upcoming semester.',
                 'status' => 'pending',
-                'user_id' => $student->id,
             ],
             [
                 'name' => 'Mike Smith',
-                'email' => 'mike.smith@example.com',
-                'subject' => 'Library Card Application',
-                'message' => 'I would like to apply for a library card. What documents do I need to submit?',
+                'email' => 'mike@example.com',
+                'subject' => 'Library Access',
+                'message' => 'I am having trouble accessing the online library resources.',
                 'status' => 'in_progress',
-            ],
-            [
-                'name' => 'Sarah Johnson',
-                'email' => 'sarah.johnson@example.com',
-                'subject' => 'Sports Equipment Availability',
-                'message' => 'I want to know if the gym equipment is available for student use and what the timings are.',
-                'status' => 'resolved',
             ],
         ];
 
-        foreach ($enquiriesData as $enquiryItem) {
-            Enquiry::create($enquiryItem);
+        foreach ($enquiriesData as $enquiryData) {
+            Enquiry::create($enquiryData);
         }
     }
 }
